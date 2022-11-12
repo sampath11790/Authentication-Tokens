@@ -12,31 +12,40 @@ const AuthForm = () => {
   };
   const loginHandler = async (event) => {
     setloading(true);
+    event.preventDefault();
     try {
-      event.preventDefault();
+      let url;
+
       const userobj = {
         email: enteredEmailRef.current.value,
         password: enteredPaswordRef.current.value,
         returnSecureToken: true,
       };
-      const rseponse = await fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfgANxrAz4GiGlY8rVOTnzXdsyhltW2vA",
-        {
-          method: "POST",
-          body: JSON.stringify(userobj),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      if (isLogin) {
+        url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBfgANxrAz4GiGlY8rVOTnzXdsyhltW2vA";
+      } else {
+        url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBfgANxrAz4GiGlY8rVOTnzXdsyhltW2vA";
+      }
+      const rseponse = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(userobj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await rseponse.json();
       if (data.error) {
-        console.log(data.error.message);
-        alert(`${data.error.message}`, setloading(false));
+        // console.log(data.error.message);
+        throw new Error(data.error.message);
+      } else {
+        console.group(data);
+        setloading(false);
       }
     } catch (error) {
-      console.log(error);
-
+      // console.log(error);
+      alert(error.message, setloading(false));
       // error ? alert("try again getting error", setloading(false)) : " ";
     }
   };
