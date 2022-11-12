@@ -19,9 +19,11 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          <li>
-            <Link to="/auth">Login</Link>
-          </li>
+          {!ctx.loginState && (
+            <li>
+              <Link to="/auth">Login</Link>
+            </li>
+          )}
           {ctx.loginState && (
             <li>
               <Link to="/profile">Profile</Link>

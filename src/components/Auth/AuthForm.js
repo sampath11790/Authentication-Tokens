@@ -45,7 +45,7 @@ const AuthForm = () => {
       } else {
         //console.group(data.idToken);
         ctx.storeLoginToken(data.idToken);
-        history.replace("/");
+        history.replace("/profile");
         setloading(false);
       }
     } catch (error) {

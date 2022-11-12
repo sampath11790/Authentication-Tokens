@@ -1,5 +1,6 @@
-import { Switch, Route } from "react-router-dom";
-
+import { Switch, Route, Redirect } from "react-router-dom";
+import UserContext from "./Context/UserContext";
+import React, { useContext } from "react";
 import ContextProvider from "./Context/contextProvider";
 
 import Layout from "./components/Layout/Layout";
@@ -8,6 +9,7 @@ import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 
 function App() {
+  const ctx = useContext(UserContext);
   return (
     <ContextProvider>
       <Layout>
@@ -15,11 +17,16 @@ function App() {
           <Route path="/" exact>
             <HomePage />
           </Route>
-          <Route path="/auth">
-            <AuthPage />
-          </Route>
-          <Route path="/profile">
-            <UserProfile />
+          {!ctx.loginState && (
+            <Route path="/auth">
+              <AuthPage />
+            </Route>
+          )}
+
+          <Route path="/profile">{!ctx.loginState && <UserProfile />}</Route>
+
+          <Route path="*">
+            <Redirect to="/"></Redirect>
           </Route>
         </Switch>
       </Layout>
